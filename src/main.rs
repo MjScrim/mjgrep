@@ -1,5 +1,6 @@
 use mjgrep::grep::{
     config::Config,
+    printer,
     search
 };
 
@@ -21,11 +22,9 @@ async fn main() {
     for matches in results.into_iter().flatten() {
         total_matches += 1;
         if config.json {
-            println!("{}", serde_json::to_string(&matches).unwrap());
-        } else if config.line_number {
-            println!("{}:{}: {}", matches.file, matches.line, matches.content);
+            printer::print_result_json(&matches);
         } else {
-            println!("{}: {}", matches.file, matches.content);
+            printer::print_result(&matches, config.line_number);
         }
     }
 
